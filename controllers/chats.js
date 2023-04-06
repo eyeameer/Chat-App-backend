@@ -64,15 +64,16 @@ const getAllMessages = asyncWrapper(async (req, res) => {
   changeStream.on("change", sendChange);
 
   // send heartbeat message every 15 seconds
-  const intervalId = setInterval(() => {
-    res.write(": heartbeat\n\n");
-  }, 15000);
   
   // Stop sending changes when client disconnects
   req.on("close", () => {
     changeStream.removeListener("change", sendChange);
     clearInterval(intervalId); // clear interval on request close
   });
+
   }
+  const intervalId = setInterval(() => {
+    res.write(": heartbeat\n\n");
+  }, 15000);
 });
 module.exports={sendMessage,getAllMessages}
