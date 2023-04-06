@@ -11,7 +11,6 @@ const sendMessage=asyncWrapper(async(req,res)=>{
      if(user.length===0){
         user=await Message.find({id:req.body.theirId+req.user.userId})
      }
-console.log(user[0].id)
      const time=new Date()
 if(user.length>0){
     const message=await Message.updateOne({id:user[0].id},{
@@ -27,8 +26,6 @@ res.status(StatusCodes.OK).json({main:friendUser})
 })
 const getAllMessages = asyncWrapper(async (req, res) => {
   let id = req.user.userId + req.params.theirId;
-  console.log(id)
-  console.log(req.user.userId)
   res.set({
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
