@@ -36,9 +36,13 @@ const getAllMessages = asyncWrapper(async (req, res) => {
    id=req.params.theirId + req.user.userId 
    messgArray = await Message.findOne({ id: id });
   }
-console.log(messgArray)
-  res.write(`data: ${JSON.stringify(messgArray.messages)}\n\n`);
-
+  if(messgArray===null){
+    res.write(`data: ${JSON.stringify([{id:'unknown',message:'send your first message😊'}])}\n\n`);
+  }
+  else{
+    res.write(`data: ${JSON.stringify(messgArray.messages)}\n\n`);
+  }
+  if(messgArray!==null){
   const pipeline = [
     {
       $match: {
@@ -48,6 +52,7 @@ console.log(messgArray)
     },
   ];
   const db = mongoose.connection;
+  
   const changeStream = db.collection("messages").watch(pipeline, {
     fullDocument: "updateLookup",
   });
@@ -62,11 +67,12 @@ console.log(messgArray)
   const intervalId = setInterval(() => {
     res.write(": heartbeat\n\n");
   }, 15000);
-
+  
   // Stop sending changes when client disconnects
   req.on("close", () => {
     changeStream.removeListener("change", sendChange);
     clearInterval(intervalId); // clear interval on request close
   });
+  }
 });
 module.exports={sendMessage,getAllMessages}
