@@ -3,6 +3,9 @@ const User=require('../models/auth')
 const {StatusCodes}=require('http-status-codes')
 const {BadRequest,NotFound, UnauthenticatedError}=require('../errors/index')
 const register=asyncWrapper(async(req,res)=>{
+    if (!req.body.number || !req.body.password || !req.body.name) {
+        throw new BadRequest('Please provide name, number and password')
+      }
    const user=await User.create({...req.body})
    const token=user.createJWT()
     res.status(StatusCodes.OK).json({name:user.name,token:token,id:user._id})
