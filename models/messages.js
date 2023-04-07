@@ -14,6 +14,9 @@ const messagesSchema=new mongoose.Schema({
             time:{type:Number}
         }
     ],
+    time:{
+        type:Number
+    }
 },
 )
 module.exports=mongoose.model("Message",messagesSchema)    

@@ -8,9 +8,16 @@ const register=asyncWrapper(async(req,res)=>{
     res.status(StatusCodes.OK).json({name:user.name,token:token,id:user._id})
 })
 const login=asyncWrapper(async(req,res)=>{
+    if (!req.body.number || !req.body.password) {
+        throw new BadRequest('Please provide number and password')
+      }
 const user=await User.findOne({"number":req.body.number})
 if(!user){
     throw new UnauthenticatedError('user not found')
+}
+const isPasswordCorrect = await user.passCheck(req.body.password)
+if (!isPasswordCorrect) {
+  throw new UnauthenticatedError('Invalid Credentials')
 }
 const token=user.createJWT()
 res.status(StatusCodes.OK).json({name:user.name,token:token,id:user._id})
