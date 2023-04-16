@@ -22,7 +22,10 @@ const UserSchema=new mongoose.Schema({
     },
     Friends:{
         type:Array
-    }
+    },
+   Photo:{
+    type:String,
+   }
 
 })
 UserSchema.pre('save', async function () {

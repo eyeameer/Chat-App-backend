@@ -63,7 +63,7 @@ const getAllMessages = asyncWrapper(async (req, res) => {
   };
   changeStream.on("change", sendChange);
 
-  // send heartbeat message every 15 seconds
+  // send heartbeat message every 15 seconds 
   
   // Stop sending changes when client disconnects
   req.on("close", () => {
